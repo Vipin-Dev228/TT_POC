@@ -1,0 +1,14 @@
+[project]
+name = "ai-candidate-finder"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.135.2",
+    "pymongo>=4.16.0",
+    "python-multipart>=0.0.22",
+    "rapidfuzz>=3.14.3",
+    "requests>=2.33.0",
+    "uvicorn>=0.42.0",
+]
