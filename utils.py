@@ -2,10 +2,8 @@ import requests
 from pathlib import Path
 from rapidfuzz import fuzz
 
-from mogo_util import fetch_candidates
 
-
-def extract_jd_data(
+def extract_jd_data_from_file(
     file_path: str,
     url: str = "https://tt-parsing.pharynxai.in/extract_jd_data",
     timeout: int = 60,
@@ -60,48 +58,21 @@ def fuzzy_match(jd_skills, candidate_skills, threshold=80):
     return overall_score, matched_skills
 
 
-def top_n_candidates(jd_path: str, n=5):
-    jd_data = extract_jd_data(jd_path)
-    bucket = jd_data.get("data")[0].get("bucket")
-    job_title = jd_data.get("data")[0].get("Job Title")
-    primary_skills = jd_data.get("data")[0].get("Primary Skills")
-
-    # Step 1: Fetch candidates from Mongo
-    candidates = fetch_candidates(bucket, job_title)
-
-    # Step 2: Calculate fuzzy match score for each candidate
-    for candidate in candidates:
-        score, matched = fuzzy_match(primary_skills, candidate.get("primarySkills"))
-        candidate["score"] = score
-        candidate["matched_skills"] = matched
-
-    # Step 3: Sort candidates by score
-    candidates.sort(key=lambda x: x["score"], reverse=True)
-
-    return candidates[:n]
-
-
 if __name__ == "__main__":
-    print(
-        top_n_candidates(
-            "/home/vipin/OFFICE/POC/AI_Candidate_finder/uploads/19d291480ef5cdf4/soft_eng_jd_20260303162035166978.pdf"
-        )
-    )
+    jd = ["Python", "Machine Learning", "Docker", "FastAPI", "Django", "Flask", "aws"]
+    candidate = [
+        "pyhton",
+        "docker",
+        "fastapi",
+        "n8n",
+        "mongodb",
+        "aws",
+        "azure",
+        "gcp",
+        "kubernetes",
+    ]
 
-    # jd = ["Python", "Machine Learning", "Docker", "FastAPI", "Django", "Flask", "aws"]
-    # candidate = [
-    #     "pyhton",
-    #     "docker",
-    #     "fastapi",
-    #     "n8n",
-    #     "mongodb",
-    #     "aws",
-    #     "azure",
-    #     "gcp",
-    #     "kubernetes",
-    # ]
+    score, matched = fuzzy_match(jd, candidate)
 
-    # score, matched = fuzzy_match(jd, candidate)
-
-    # print(score)
-    # print(matched)
+    print(score)
+    print(matched)

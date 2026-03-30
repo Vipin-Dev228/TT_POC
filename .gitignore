@@ -1,3 +1,6 @@
 uploads
 .venv
 __pycache__
+test
+.reff
+downloads
